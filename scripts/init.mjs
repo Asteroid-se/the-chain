@@ -1,8 +1,8 @@
 import { existsSync, copyFileSync, mkdirSync, closeSync, openSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
-if (!existsSync('.env')) copyFileSync('.env.example', '.env');
-process.loadEnvFile('.env');
+if (!existsSync('.env') && !process.env.DATABASE_URL) copyFileSync('.env.example', '.env');
+if (existsSync('.env')) process.loadEnvFile('.env');
 // Create the SQLite file first; Prisma 6 can fail on Windows when it is absent.
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl?.startsWith('file:')) throw new Error('DATABASE_URL must be a SQLite file URL.');

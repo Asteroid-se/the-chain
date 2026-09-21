@@ -16,6 +16,7 @@
     "build": "next build",
     "prestart": "node scripts/init.mjs",
     "start": "next start --hostname 127.0.0.1",
+    "start:container": "node scripts/init.mjs && next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",

@@ -1,0 +1,6 @@
+{$SITE_DOMAIN} {
+  basic_auth {
+    demo {$SITE_PASSWORD_HASH}
+  }
+  reverse_proxy app:3000
+}

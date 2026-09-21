@@ -32,6 +32,8 @@ npm start
 
 This is a single-user local workspace, bound to loopback by default. It has no authentication or per-user isolation; do not publish its write APIs to the public internet without adding those features. Production deployment should use migrations instead of startup `db push` and retain the SQLite file on persistent storage.
 
+For a password-protected internet demo on one VPS, see [the Turkish deployment guide](deploy/README.tr.md). It includes Docker Compose, a persistent SQLite volume, Caddy HTTPS, and HTTP Basic Authentication. The deployment remains a shared demo workspace.
+
 ## Try the complete workflow
 
 1. Click **Cinematic video**, or paste an HTTP(S) URL and choose **Analyze link**.
