@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+model Download {
+  id          String   @id @default(cuid())
+  url         String
+  provider    String
+  title       String
+  thumbnail   String
+  format      String
+  quality     String
+  mediaType   String
+  status      String   @default("queued")
+  fileSize    Int
+  progress    Int      @default(0)
+  paused      Boolean  @default(false)
+  attempts    Int      @default(0)
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  completedAt DateTime?
+}
