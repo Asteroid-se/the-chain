@@ -90,7 +90,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="topbar-right">
             <span className="demo-badge">
-              <span /> Direct media enabled
+              <span /> Real downloads enabled
             </span>
             <span className="avatar">TC</span>
           </div>
@@ -121,8 +121,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
             Paste an HTTP or HTTPS media URL, analyze it, pick a format, and add it to your queue.
           </p>
           <p>
-            Direct public media-file URLs are downloaded and stored for you. Platform pages still
-            use demo metadata because protected or private content is never bypassed.
+            Public YouTube videos and direct public media-file URLs are downloaded and stored for
+            you. Instagram and TikTok samples remain demos. Private, account-only, and protected
+            content is not accessed.
           </p>
           <p>
             Try “Test retry” to simulate a failed transfer, then retry it. Completed demos appear in

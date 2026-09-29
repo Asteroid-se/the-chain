@@ -24,7 +24,8 @@ model Download {
   updatedAt   DateTime @default(now())
   completedAt DateTime?
   sourceUrl   String?
-  filePath    String?
-  mimeType    String?
-  real        Boolean  @default(false)
+  sourceFormat String?
+  filePath     String?
+  mimeType     String?
+  real         Boolean  @default(false)
 }

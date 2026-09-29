@@ -8,8 +8,13 @@ export function MediaArt({
   className?: string;
   play?: boolean;
 }) {
+  const remote = /^https?:\/\//i.test(kind);
   return (
-    <div aria-hidden="true" className={`media-art art-${kind} ${className}`}>
+    <div
+      aria-hidden="true"
+      className={`media-art ${remote ? 'art-remote' : `art-${kind}`} ${className}`}
+      style={remote ? { backgroundImage: `url(${JSON.stringify(kind)})` } : undefined}
+    >
       <div className="art-glow" />
       <div className="art-sun" />
       <div className="mountain mountain-back" />

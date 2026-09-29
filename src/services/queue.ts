@@ -49,6 +49,7 @@ export async function enqueue(url: string, formatId: string) {
       mediaType: format.mediaType,
       fileSize: format.fileSize,
       sourceUrl: media.demo ? null : media.url,
+      sourceFormat: media.demo ? null : format.id,
       mimeType: media.demo ? null : (format.mimeType ?? 'application/octet-stream'),
       real: !media.demo,
     },

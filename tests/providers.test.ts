@@ -31,7 +31,7 @@ test('demo adapters expose relevant formats with explicit demo metadata', async 
   );
   const audio = await analyzeMedia('https://media.example.com/late-night.wav');
   assert.ok(audio.formats.every((item) => item.mediaType === 'audio'));
-  const video = await analyzeMedia('https://youtube.com/watch?v=demo');
+  const video = await analyzeMedia('https://www.youtube.com/watch?v=chain-demo');
   assert.ok(video.formats.some((item) => item.quality === '1080p'));
   assert.ok(video.formats.some((item) => item.extension === 'mp3'));
 });

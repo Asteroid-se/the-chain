@@ -73,7 +73,11 @@ export function Downloader() {
         method: 'POST',
         body: JSON.stringify({ url: media.url, formatId: format }),
       });
-      setToast({ text: 'Added to your queue. Your demo is on its way.' });
+      setToast({
+        text: media.demo
+          ? 'Added to your queue. Your demo is on its way.'
+          : 'Added to your queue. Download started.',
+      });
       await refresh();
     } catch (e) {
       setToast({ text: (e as Error).message, error: true });
@@ -199,7 +203,7 @@ export function Downloader() {
         </div>
         <div className="demo-note" id="demo-description">
           <Info size={15} />
-          <p>Direct media-file links download for real. Platform pages use safe demo adapters.</p>
+          <p>Public YouTube videos and direct media-file links download for real.</p>
           <button
             type="button"
             className="demo-sample"

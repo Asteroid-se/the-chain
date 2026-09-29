@@ -1,6 +1,6 @@
 # The Chain'i internete açma
 
-Bu kurulum tek bir Linux sunucuda Docker Compose ile çalışır. SQLite verisi `chain_data`, indirilen medya dosyaları `chain_files` adlı kalıcı Docker biriminde tutulur. Caddy, HTTPS sertifikasını alır ve tüm sayfalar ile API uç noktalarını tek bir parola ile korur. Doğrudan, herkese açık medya dosyası URL'leri gerçek dosya oluşturur; YouTube, Instagram ve TikTok sayfa bağlantıları demo adaptörlerini kullanır. Parolayı bilen herkes aynı kuyruğu, geçmişi, dosyaları ve istatistikleri görür.
+Bu kurulum tek bir Linux sunucuda Docker Compose ile çalışır. SQLite verisi `chain_data`, indirilen medya dosyaları `chain_files` adlı kalıcı Docker biriminde tutulur. Caddy, HTTPS sertifikasını alır ve tüm sayfalar ile API uç noktalarını tek bir parola ile korur. Herkese açık YouTube videoları ile doğrudan medya dosyası URL'leri gerçek dosya oluşturur; Instagram ve TikTok bağlantıları demo adaptörlerini kullanır. Docker imajı `yt-dlp` ve FFmpeg'i içerir. Parolayı bilen herkes aynı kuyruğu, geçmişi, dosyaları ve istatistikleri görür.
 
 ## Gerekenler
 

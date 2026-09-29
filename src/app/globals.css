@@ -634,6 +634,17 @@ h2 {
 .art-landscape {
   background: linear-gradient(180deg, #9ba8b2 0%, #d7b2a1 40%, #aa8988 60%, #454851 100%);
 }
+.art-remote {
+  background-color: #25222a;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.art-remote .art-glow,
+.art-remote .art-sun,
+.art-remote .mountain {
+  display: none;
+}
 .art-glow {
   position: absolute;
   width: 150%;
