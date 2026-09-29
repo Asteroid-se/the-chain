@@ -2,7 +2,7 @@
 
 A local media download manager with a custom dark interface. Built with Next.js App Router, TypeScript, Tailwind CSS, Lucide, Zod, Prisma, and SQLite.
 
-**This MVP runs entirely in demo mode.** YouTube, Instagram, TikTok, and generic links produce clearly labeled example metadata and simulated transfers. No remote URLs are fetched, no platform protections are bypassed, and no media files are created. Format options and byte counts are illustrative.
+**Direct public media-file URLs download for real.** The generic adapter accepts direct HTTP(S) links whose response is a supported video, audio, or image type with a declared size. Files are streamed into `MEDIA_DIR`, tracked in SQLite, and can be saved from History. YouTube, Instagram, and TikTok page URLs still use clearly labeled demo adapters. No DRM, login, private-content, or platform protection bypass is implemented.
 
 ## Run
 
@@ -21,6 +21,8 @@ Default environment:
 
 ```env
 DATABASE_URL="file:./dev.db"
+MEDIA_DIR="./storage"
+MAX_MEDIA_BYTES="536870912"
 ```
 
 Prisma resolves relative database paths against `prisma/`. You can set a different SQLite file through `.env` or the process environment. For a manual schema update, run `npm run db:push`. Do not commit `.env` or database files. For production-style local execution:
@@ -36,15 +38,15 @@ For a password-protected internet demo on one VPS, see [the Turkish deployment g
 
 ## Try the complete workflow
 
-1. Click **Cinematic video**, or paste an HTTP(S) URL and choose **Analyze link**.
+1. Paste a direct public media-file URL such as an `.mp4` URL and choose **Analyze link**, or click a platform sample to exercise demo mode.
 2. Select a format, then **Add to queue**.
-3. Watch progress, pause, refresh the page, and resume. Transfers take about 13 seconds while unpaused.
-4. Open **Download history** to see the completed transfer; search, filter by platform or media type, and delete records.
+3. Watch real byte progress, pause, refresh the page, and resume. Resume uses HTTP Range when the origin supports it; otherwise the transfer safely restarts from byte zero.
+4. Open **Download history** to save the completed file to your device; search, filter by platform or media type, and delete records. Deleting a real record deletes its stored file.
 5. Open **Overview** to see statistics calculated from completed SQLite records.
 6. Choose **Test retry** to trigger a deliberate failure at 42%. Retry succeeds on the next attempt.
 7. Try **Ambient audio** and **Photography** for their relevant format selectors.
 
-Generic URLs use mock metadata too. An unknown website is not reported as a supported real downloader. Since there is no upstream fetch, remote availability, permissions, and provider outages cannot be verified in this MVP. Network errors between browser and API, invalid input, unavailable formats, missing records, invalid transitions, and unexpected database errors have user-facing error responses.
+Generic URLs are inspected with HEAD, with a one-byte Range fallback. Supported MIME types are MP4, WebM, QuickTime, MP3, M4A, OGG, WAV, JPEG, PNG, WebP, and GIF. The default limit is 512 MB. The server rejects private/local IP addresses, embedded credentials, nonstandard ports, redirects to blocked destinations, unknown MIME types, missing sizes, and oversized responses. Only download media you own or are permitted to download.
 
 ## Structure
 
@@ -56,7 +58,7 @@ src/components/          Custom UI, queue rows, media preview, statistics
 src/hooks/               Polling and client state
 src/lib/                 Prisma singleton, HTTP helpers, URL validation
 src/providers/           Provider contract, adapters, demo fixtures
-src/services/            Queue transitions, history queries, statistics
+src/services/            Queue transitions, real file worker, history and statistics
 src/types/               Shared media and API data types
 tests/                   Unit tests and browser integration tests
 ```
@@ -74,27 +76,28 @@ To add a provider:
 3. Register it ahead of `generic` in `src/providers/index.ts`.
 4. Add detection, display, and adapter tests.
 
-For a future real adapter, use only permitted sources or official APIs and implement explicit unavailable/unsupported errors. Keep any transfer execution in a worker, separate from analysis. Before accepting arbitrary real fetch targets, add public-address validation, DNS and redirect checks, response limits, timeouts, and content-type validation. Do not introduce DRM circumvention, login bypasses, or private-content scraping.
+Provider page adapters should use official or otherwise permitted sources and return explicit unavailable/unsupported errors. The generic adapter already validates public addresses, every redirect, response size, timeout, and content type. Do not introduce DRM circumvention, login bypasses, or private-content scraping.
 
 ## Queue design
 
 SQLite stores `queued`, `processing`, `completed`, and `failed`, plus a separate `paused` flag, progress, attempt count, and timestamps. Pause/resume/retry are validated transitions. Retry resets progress and increments attempts. Completed records are the history; deleting or clearing them also updates statistics.
 
-The simulated worker reconciles elapsed time in `src/services/queue.ts` when the queue or statistics API is read. Every 250 ms represents two percentage points. Browser polling runs every 1.5 seconds. Paused records are excluded, and resume updates the timestamp so paused time is never counted. State survives reloads and restarts. When no client is open, no background process runs; the next read reconciles elapsed time. `completedAt` records reconciliation time, not a real transfer finish time.
+Demo jobs retain elapsed-time reconciliation. Real jobs stream their origin response to `MEDIA_DIR`, update byte progress in SQLite, and run through Next.js `after()` after the enqueue response. Browser polling runs every 1.5 seconds. A queue read restarts an interrupted real worker after a server restart. State and partial files survive reloads and restarts.
 
-The MVP processes one item at a time, oldest first. Pausing the first item holds the queue; resuming or removing it lets the queue continue. Waiting jobs start their progress clock only when selected. Replace reconciliation with a durable worker and atomic job claims later, keeping the existing status contract and API. Real worker concurrency, backpressure, speed limits, cancellation, disk storage, and downloadable file artifacts are future work.
+The MVP processes one real item at a time, oldest first. Pausing the first real item holds the real queue; resuming or removing it lets the queue continue. The current in-process worker suits the single-instance Docker deployment. Multiple application replicas need a durable external worker and atomic job claims.
 
 ## API
 
-| Endpoint                    | Purpose                                              |
-| --------------------------- | ---------------------------------------------------- |
-| `POST /api/analyze`         | `{ url }` → demo metadata and formats                |
-| `POST /api/download`        | `{ url, formatId }` → persisted queue item           |
-| `GET /api/downloads`        | `scope=queue\|history`, `search`, `provider`, `type` |
-| `PATCH /api/downloads/:id`  | `{ action: "pause"\|"resume"\|"retry" }`             |
-| `DELETE /api/downloads/:id` | Remove one queue/history record                      |
-| `DELETE /api/downloads`     | Clear completed records only                         |
-| `GET /api/stats`            | Counts, total bytes, most used platform              |
+| Endpoint                      | Purpose                                              |
+| ----------------------------- | ---------------------------------------------------- |
+| `POST /api/analyze`           | `{ url }` → real direct-file or demo metadata        |
+| `POST /api/download`          | `{ url, formatId }` → persisted queue item           |
+| `GET /api/downloads`          | `scope=queue\|history`, `search`, `provider`, `type` |
+| `PATCH /api/downloads/:id`    | `{ action: "pause"\|"resume"\|"retry" }`             |
+| `DELETE /api/downloads/:id`   | Remove one queue/history record                      |
+| `GET /api/downloads/:id/file` | Stream one completed stored media file               |
+| `DELETE /api/downloads`       | Clear completed records only                         |
+| `GET /api/stats`              | Counts, total bytes, most used platform              |
 
 History queries return up to 200 matching records, newest first; statistics aggregate all completed records. Pagination is future work.
 

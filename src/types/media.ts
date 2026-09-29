@@ -7,6 +7,7 @@ export interface MediaFormat {
   quality: string;
   mediaType: MediaType;
   fileSize: number;
+  mimeType?: string;
 }
 export interface Media {
   url: string;
@@ -16,7 +17,7 @@ export interface Media {
   duration: string | null;
   thumbnail: string;
   formats: MediaFormat[];
-  demo: true;
+  demo: boolean;
 }
 export interface DownloadItem {
   id: string;
@@ -34,6 +35,7 @@ export interface DownloadItem {
   error: string | null;
   createdAt: string;
   completedAt: string | null;
+  hasFile: boolean;
 }
 export interface Stats {
   total: number;

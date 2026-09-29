@@ -199,10 +199,19 @@ export function Downloader() {
         </div>
         <div className="demo-note" id="demo-description">
           <Info size={15} />
-          <p>You’re in demo mode. Explore the full flow with simulated media and downloads.</p>
-          <span>
-            No sign-in needed <ArrowUpRight size={12} />
-          </span>
+          <p>Direct media-file links download for real. Platform pages use safe demo adapters.</p>
+          <button
+            type="button"
+            className="demo-sample"
+            disabled={analyzing}
+            onClick={() =>
+              void analyze(
+                'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+              )
+            }
+          >
+            Try a real CC0 MP4 <ArrowUpRight size={12} />
+          </button>
         </div>
       </section>
       {analyzing && <Skeleton />}

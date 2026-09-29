@@ -97,7 +97,7 @@ export function History() {
           <span>
             {items.length} matching {items.length === 1 ? 'download' : 'downloads'}
           </span>
-          <span>COMPLETED DEMO TRANSFERS</span>
+          <span>COMPLETED TRANSFERS</span>
         </div>
         {error && (
           <p role="alert" className="error-banner">
@@ -118,8 +118,8 @@ export function History() {
         )}
       </div>
       <p className="page-note">
-        History and statistics are stored locally in SQLite. Demo transfers don’t create media
-        files.
+        History and statistics are stored locally in SQLite. Direct media files can be saved again
+        with the download action.
       </p>
       <Toast message={toast} onClose={() => setToast(null)} />
       {confirm && (
@@ -135,8 +135,8 @@ export function History() {
           </button>
           <h2 id="clear-title">Clear your history?</h2>
           <p>
-            This permanently removes all completed demo records and resets your statistics. Active
-            queue items stay in place.
+            This permanently removes all completed records and stored media files, and resets your
+            statistics. Active queue items stay in place.
           </p>
           <div className="modal-actions">
             <button

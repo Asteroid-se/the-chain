@@ -1,6 +1,6 @@
 # The Chain'i internete açma
 
-Bu kurulum tek bir Linux sunucuda Docker Compose ile çalışır. SQLite verisi `chain_data` adlı kalıcı Docker biriminde tutulur. Caddy, HTTPS sertifikasını alır ve tüm sayfalar ile API uç noktalarını tek bir parola ile korur. **Bu bir demo yayınıdır:** indirme işlemleri simüle edilir, dosya oluşturulmaz. Parolayı bilen herkes aynı kuyruğu, geçmişi ve istatistikleri görür.
+Bu kurulum tek bir Linux sunucuda Docker Compose ile çalışır. SQLite verisi `chain_data`, indirilen medya dosyaları `chain_files` adlı kalıcı Docker biriminde tutulur. Caddy, HTTPS sertifikasını alır ve tüm sayfalar ile API uç noktalarını tek bir parola ile korur. Doğrudan, herkese açık medya dosyası URL'leri gerçek dosya oluşturur; YouTube, Instagram ve TikTok sayfa bağlantıları demo adaptörlerini kullanır. Parolayı bilen herkes aynı kuyruğu, geçmişi, dosyaları ve istatistikleri görür.
 
 ## Gerekenler
 
@@ -43,6 +43,6 @@ git pull
 docker compose up -d --build
 ```
 
-Güncelleme `chain_data` birimini silmez. `docker compose down -v` komutu veritabanı ve sertifika birimlerini silebilir; kullanmayın. VPS sağlayıcınızda bu birim için düzenli yedek alın. Bu örnekte başlangıçta `prisma db push` şemayı eşitler. İleride veri şeması değiştirirken sürümlü Prisma migration kullanın.
+Güncelleme `chain_data` ve `chain_files` birimlerini silmez. `docker compose down -v` komutu veritabanı, medya ve sertifika birimlerini silebilir; kullanmayın. VPS sağlayıcınızda `chain_data` ve `chain_files` için düzenli yedek alın ve disk kullanımını izleyin. Varsayılan dosya sınırı 512 MB'dir; `compose.yaml` içindeki `MAX_MEDIA_BYTES` ile değiştirilebilir. Bu örnekte başlangıçta `prisma db push` şemayı eşitler. İleride veri şeması değiştirirken sürümlü Prisma migration kullanın.
 
 Bu kurulum tek kullanıcı/parola sınırına sahip. Her ziyaretçinin kendi kuyruğu ve geçmişi olmasını istiyorsanız kullanıcı oturumu, kayıt sahipliği, erişim denetimi ve gerçek bir çok kullanıcılı veritabanı eklenmelidir. Parolayı kaldırıp mevcut API'yi açık internete sunmayın.

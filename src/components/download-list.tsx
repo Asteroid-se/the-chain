@@ -9,6 +9,7 @@ import {
   Trash2,
   AlertCircle,
   LoaderCircle,
+  Download,
 } from 'lucide-react';
 import type { DownloadItem } from '@/types/media';
 import { bytes } from '@/lib/client';
@@ -101,6 +102,16 @@ export function DownloadList({
               <LoaderCircle className="spin" size={16} />
             ) : (
               <>
+                {history && item.hasFile && (
+                  <a
+                    className="icon-button"
+                    href={`/api/downloads/${item.id}/file`}
+                    aria-label="Save downloaded file"
+                    title="Save downloaded file"
+                  >
+                    <Download size={17} />
+                  </a>
+                )}
                 {item.status === 'failed' && (
                   <button
                     className="icon-button"

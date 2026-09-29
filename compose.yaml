@@ -5,10 +5,13 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: file:../data/chain.db
+      MEDIA_DIR: /app/storage
+      MAX_MEDIA_BYTES: '536870912'
     volumes:
       - chain_data:/app/data
+      - chain_files:/app/storage
     expose:
-      - "3000"
+      - '3000'
 
   caddy:
     image: caddy:2
@@ -18,9 +21,9 @@ services:
     env_file:
       - .env.deploy
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -28,5 +31,6 @@ services:
 
 volumes:
   chain_data:
+  chain_files:
   caddy_data:
   caddy_config:

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { detectProvider, urlSchema } from '../src/lib/url';
 import { analyzeMedia } from '../src/providers';
+import { assertPublicUrl } from '../src/lib/remote-media';
 test('detects provider domains without trusting lookalikes', () => {
   assert.equal(detectProvider('https://m.youtube.com/watch?v=123'), 'YouTube');
   assert.equal(detectProvider('https://youtu.be/demo'), 'YouTube');
@@ -28,9 +29,19 @@ test('demo adapters expose relevant formats with explicit demo metadata', async 
     image.formats.map((item) => item.extension),
     ['jpg', 'png'],
   );
-  const audio = await analyzeMedia('https://example.com/sound.wav');
+  const audio = await analyzeMedia('https://media.example.com/late-night.wav');
   assert.ok(audio.formats.every((item) => item.mediaType === 'audio'));
   const video = await analyzeMedia('https://youtube.com/watch?v=demo');
   assert.ok(video.formats.some((item) => item.quality === '1080p'));
   assert.ok(video.formats.some((item) => item.extension === 'mp3'));
+});
+test('blocks local, private, credentialed, and nonstandard-port fetch targets', async () => {
+  for (const url of [
+    'http://127.0.0.1/video.mp4',
+    'http://[::1]/video.mp4',
+    'http://user:secret@example.com/video.mp4',
+    'https://example.com:8443/video.mp4',
+  ]) {
+    await assert.rejects(() => assertPublicUrl(new URL(url)));
+  }
 });

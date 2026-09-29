@@ -516,14 +516,19 @@ h1 > span {
 .demo-note > p {
   line-height: 1.5;
 }
-.demo-note > span {
+.demo-note > span,
+.demo-sample {
   margin-left: auto;
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 7px;
   font-size: 9px;
-  color: #6f657e;
+  color: #8f7ba3;
+  background: none;
+}
+.demo-sample:hover {
+  color: #c4a6e4;
 }
 .section-heading {
   display: flex;
@@ -1383,7 +1388,8 @@ select {
   .page-footer {
     padding: 20px 27px;
   }
-  .demo-note > span {
+  .demo-note > span,
+  .demo-sample {
     display: none;
   }
   .example-copy {

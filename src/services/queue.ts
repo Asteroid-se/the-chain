@@ -9,6 +9,7 @@ export async function reconcileQueue() {
       orderBy: { createdAt: 'asc' },
     });
     if (!job || job.paused) return;
+    if (job.real) return;
     if (job.status === 'queued') {
       await tx.download.update({
         where: { id: job.id },
@@ -47,6 +48,9 @@ export async function enqueue(url: string, formatId: string) {
       quality: format.quality,
       mediaType: format.mediaType,
       fileSize: format.fileSize,
+      sourceUrl: media.demo ? null : media.url,
+      mimeType: media.demo ? null : (format.mimeType ?? 'application/octet-stream'),
+      real: !media.demo,
     },
   });
 }
@@ -70,6 +74,12 @@ export async function changeJob(id: string, action: 'pause' | 'resume' | 'retry'
     }
     if (!['queued', 'processing'].includes(job.status))
       throw new ApiError('This download is no longer active.', 409);
-    return tx.download.update({ where: { id }, data: { paused: action === 'pause' } });
+    return tx.download.update({
+      where: { id },
+      data: {
+        paused: action === 'pause',
+        ...(action === 'resume' ? { status: 'queued' } : {}),
+      },
+    });
   });
 }

@@ -90,7 +90,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="topbar-right">
             <span className="demo-badge">
-              <span /> Demo mode
+              <span /> Direct media enabled
             </span>
             <span className="avatar">TC</span>
           </div>
@@ -121,8 +121,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
             Paste an HTTP or HTTPS media URL, analyze it, pick a format, and add it to your queue.
           </p>
           <p>
-            This MVP uses demo metadata and simulated transfers for every provider. It does not
-            fetch external media or create downloadable files. Sizes and formats are illustrative.
+            Direct public media-file URLs are downloaded and stored for you. Platform pages still
+            use demo metadata because protected or private content is never bypassed.
           </p>
           <p>
             Try “Test retry” to simulate a failed transfer, then retry it. Completed demos appear in

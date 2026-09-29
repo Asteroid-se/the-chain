@@ -47,8 +47,8 @@ export function Dashboard() {
           <ShieldCheck size={23} />
           <h2>A thoughtful starting point.</h2>
           <p>
-            All providers currently use simulated media. No external content is fetched, no
-            restrictions are bypassed, and no media files are saved.
+            Direct public media links create real files. Platform samples remain simulated, and
+            restrictions, logins, private content, and DRM are never bypassed.
           </p>
           <Link className="text-link" href="/">
             Try a demo download <ArrowRight size={15} />

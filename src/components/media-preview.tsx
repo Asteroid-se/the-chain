@@ -25,7 +25,7 @@ export function MediaPreview({
       <div className="preview-content">
         <div className="preview-top">
           <Platform name={media.provider} />
-          <span className="tiny-badge">DEMO PREVIEW</span>
+          <span className="tiny-badge">{media.demo ? 'DEMO PREVIEW' : 'DIRECT MEDIA'}</span>
           <button className="icon-button" aria-label="Close preview" onClick={onClose}>
             <X size={17} />
           </button>

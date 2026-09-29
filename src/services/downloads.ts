@@ -7,7 +7,7 @@ export async function getDownloads(filters: {
   type: string;
 }) {
   await reconcileQueue();
-  return db.download.findMany({
+  const downloads = await db.download.findMany({
     where: {
       ...(filters.scope === 'history' ? { status: 'completed' } : { status: { not: 'completed' } }),
       ...(filters.search ? { title: { contains: filters.search } } : {}),
@@ -16,6 +16,13 @@ export async function getDownloads(filters: {
     },
     orderBy: { createdAt: 'desc' },
     take: 200,
+  });
+  return downloads.map(({ filePath, sourceUrl, ...download }) => {
+    void sourceUrl;
+    return {
+      ...download,
+      hasFile: download.status === 'completed' && Boolean(filePath),
+    };
   });
 }
 export async function getStats() {

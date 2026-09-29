@@ -10,7 +10,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-RUN mkdir /app/data && chown node:node /app/data
+RUN mkdir /app/data /app/storage && chown node:node /app/data /app/storage
 ENV NODE_ENV=production
 ENV DATABASE_URL=file:../data/chain.db
 USER node
